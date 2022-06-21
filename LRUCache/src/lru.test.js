@@ -163,3 +163,61 @@ test("存在しなければ null を返す", () => {
     i++;
   });
 });
+test("テストケース1", () => {
+  /************** generate phase **************/
+  const lru = new LRUCache(2); //キャッシュサイズ2で作成
+  lru.put("a", "dataA");
+  lru.put("b", "dataB");
+  lru.put("c", "dataC");
+  console.log(lru);
+
+  /************** test phase **************/
+  expect(lru.cachesize).toBe(2);
+  expect(lru.size).toBe(2);
+  expect(lru.get("a")).toBe(null);
+
+  var i = 0;
+  lru.forEach((val, key) => {
+    switch (i) {
+      case 0:
+        expect(key).toBe("b");
+        expect(val).toBe("dataB");
+        break;
+      case 1:
+        expect(key).toBe("c");
+        expect(val).toBe("dataC");
+        break;
+    }
+    i++;
+  });
+});
+
+test("テストケース2", () => {
+  /************** generate phase **************/
+  const lru = new LRUCache(2); //キャッシュサイズ2で作成
+  lru.put("a", "dataA");
+  lru.put("b", "dataB");
+  lru.get("a");
+  lru.put("c", "dataC");
+  console.log(lru);
+
+  /************** test phase **************/
+  expect(lru.cachesize).toBe(2);
+  expect(lru.size).toBe(2);
+  expect(lru.get("b")).toBe(null);
+
+  var i = 0;
+  lru.forEach((val, key) => {
+    switch (i) {
+      case 0:
+        expect(key).toBe("a");
+        expect(val).toBe("dataA");
+        break;
+      case 1:
+        expect(key).toBe("c");
+        expect(val).toBe("dataC");
+        break;
+    }
+    i++;
+  });
+});
