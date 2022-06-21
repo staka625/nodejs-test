@@ -6,8 +6,9 @@ class LRUCache extends Map {
 
   set(key, value) {
     super.set(key, value);
+    //キャッシュサイズ以上になれば
     if (this.size > this.cachesize) {
-      this.deleteFirstElement();
+      this.deleteFirstElement(); //先頭のデータを削除する
     }
     return this;
   }
