@@ -104,3 +104,32 @@ test("getの作成", () => {
     i++;
   });
 });
+
+test("get されたら使われたとみなす", () => {
+  /************** generate phase **************/
+  const lru = new LRUCache(2); //キャッシュサイズ2で作成
+  lru.set(1, 1); //[1,1]を追加
+  lru.set(2, 2); //[2,2]を追加
+  lru.get(1); //1が使われる
+  lru.set(3, 3); //[3,3]を追加(ここで[2,2]が先頭なので削除)
+  console.log(lru); //確認のため表示({1 => 1, 3 => 3}となるはず)
+
+  /************** test phase **************/
+  expect(lru.cachesize).toBe(2); //キャッシュサイズは1か？
+  expect(lru.size).toBe(2); //サイズは2か？
+
+  var i = 0;
+  lru.forEach((key, val) => {
+    switch (i) {
+      case 0: //index-0番目のデータがkey,valともに1か？
+        expect(key).toBe(1);
+        expect(val).toBe(1);
+        break;
+      case 1: //index1番目のデータがkey,valともに3か？
+        expect(key).toBe(3);
+        expect(val).toBe(3);
+        break;
+    }
+    i++;
+  });
+});
