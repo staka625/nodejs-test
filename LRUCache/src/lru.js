@@ -6,7 +6,9 @@ class LRUCache extends Map {
 
   set(key, value) {
     super.set(key, value);
-
+    if (this.size > this.cachesize) {
+      this.deleteFirstElement();
+    }
     return this;
   }
 
