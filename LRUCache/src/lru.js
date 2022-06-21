@@ -14,6 +14,9 @@ class LRUCache extends Map {
   }
 
   get(key) {
+    if (!this.has(key)) {
+      return null;
+    }
     const val = super.get(key);
     this.delete(key);
     super.set(key, val);
