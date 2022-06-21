@@ -1,3 +1,4 @@
+const exp = require("constants");
 const { expect } = require("expect");
 const { beforeAll } = require("jest-circus");
 const LRUCache = require("./lru");
@@ -69,6 +70,35 @@ test("Cache の最大サイズに達したら最も使われていないデー�
       case 1: //index1番目のデータがkey,valともに3か？
         expect(key).toBe(3);
         expect(val).toBe(3);
+        break;
+    }
+    i++;
+  });
+});
+
+test("getの作成", () => {
+  /************** generate phase **************/
+  const lru = new LRUCache(2); //キャッシュサイズ2で作成
+  lru.set(1, 1); //[1,1]を追加
+  lru.set(2, 2); //[2,2]を追加
+  const val = lru.get(2); //2が使われる
+  console.log(lru); //確認のため表示
+
+  /************** test phase **************/
+  expect(lru.cachesize).toBe(2); //キャッシュサイズは1か？
+  expect(lru.size).toBe(2); //サイズは2か？
+  expect(val).toBe(2); //getした値は2か？
+
+  var i = 0;
+  lru.forEach((key, val) => {
+    switch (i) {
+      case 0: //index-0番目のデータがkey,valともに1か？
+        expect(key).toBe(1);
+        expect(val).toBe(1);
+        break;
+      case 1: //index1番目のデータがkey,valともに2か？
+        expect(key).toBe(2);
+        expect(val).toBe(2);
         break;
     }
     i++;
