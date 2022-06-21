@@ -4,7 +4,7 @@ class LRUCache extends Map {
     this.cachesize = cachesize;
   }
 
-  set(key, value) {
+  put(key, value) {
     super.set(key, value);
     //キャッシュサイズ以上になれば
     if (this.size > this.cachesize) {
