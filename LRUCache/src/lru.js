@@ -13,6 +13,11 @@ class LRUCache extends Map {
     return this;
   }
 
+  get(key) {
+    const ret = super.get(key);
+    return ret;
+  }
+
   //最初の要素を削除
   deleteFirstElement() {
     for (const elm of this) {
