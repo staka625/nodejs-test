@@ -1,6 +1,3 @@
-const exp = require("constants");
-const { expect } = require("expect");
-const { beforeAll } = require("jest-circus");
 const LRUCache = require("./lru");
 
 test("要素を追加する", () => {
