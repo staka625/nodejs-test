@@ -1,12 +1,12 @@
-import fetch, { Headers } from "node-fetch";
+import fetch from "node-fetch";
 import * as fs from "fs";
-import { URL } from "url";
 
 var obj = {
   url: undefined,
   shouldBeVerbose: false,
   fileName: "",
   txt: "",
+  option: "POST",
 };
 
 /*
@@ -32,11 +32,18 @@ function curl() {
     if (arg === "-v") {
       obj.shouldBeVerbose = true;
     }
-    if (arg == "-o") {
+    if (arg === "-o") {
       if (i === process.argv.length) {
         throw "requires parameter";
       }
       obj.fileName = process.argv[i + 1];
+      i++;
+    }
+    if (arg === "-X") {
+      if (i === process.argv.length) {
+        throw "requires parameter";
+      }
+      obj.option = process.argv[i + 1];
       i++;
     }
     if (isURL(arg)) {
@@ -47,7 +54,9 @@ function curl() {
     throw "no URL specified";
   }
 
-  fetch(obj.url)
+  fetch(obj.url, {
+    method: obj.option,
+  })
     .then((response) => {
       if (obj.shouldBeVerbose) {
         var txt = "type : " + response.type + "\n";
