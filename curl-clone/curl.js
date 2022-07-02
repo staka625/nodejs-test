@@ -7,6 +7,7 @@ var obj = {
   fileName: "",
   txt: "",
   option: "POST",
+  body: new URLSearchParams(),
 };
 
 /*
@@ -46,16 +47,29 @@ function curl() {
       obj.option = process.argv[i + 1];
       i++;
     }
+    if (arg === "-d") {
+      if (i === process.argv.length) {
+        throw "requires parameter";
+      }
+      var arg1 = process.argv[i + 1];
+      var keys = arg1.split("&");
+      keys.forEach((key) => {
+        var val = key.split("=", 2);
+        obj.body.append(...val);
+      });
+    }
     if (isURL(arg)) {
       obj.url = arg;
     }
   }
+
   if (!obj.url) {
     throw "no URL specified";
   }
 
   fetch(obj.url, {
     method: obj.option,
+    body: obj.body,
   })
     .then((response) => {
       if (obj.shouldBeVerbose) {
