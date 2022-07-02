@@ -1,10 +1,12 @@
-import fetch from "node-fetch";
+import fetch, { Headers } from "node-fetch";
 import * as fs from "fs";
+import { URL } from "url";
 
 var obj = {
   url: undefined,
-  shouldSave: false,
+  shouldBeVerbose: false,
   fileName: "",
+  txt: "",
 };
 
 /*
@@ -20,16 +22,22 @@ function isURL(str) {
   return str.match(httpPattern) ? true : false;
 }
 
+/*
+ * curlコマンドのクローン関数
+ */
 function curl() {
   // argv[0]はnode,argv[1]はファイル名(curl.js)となるので添字は2から開始
   for (let i = 2; i < process.argv.length; i++) {
     var arg = process.argv[i];
+    if (arg === "-v") {
+      obj.shouldBeVerbose = true;
+    }
     if (arg == "-o") {
       if (i === process.argv.length) {
         throw "requires parameter";
       }
-        obj.fileName = process.argv[i + 1];
-        i++;
+      obj.fileName = process.argv[i + 1];
+      i++;
     }
     if (isURL(arg)) {
       obj.url = arg;
@@ -38,13 +46,31 @@ function curl() {
   if (!obj.url) {
     throw "no URL specified";
   }
+
   fetch(obj.url)
     .then((response) => {
+      if (obj.shouldBeVerbose) {
+        var txt = "type : " + response.type + "\n";
+        txt += "url : " + response.url + "\n";
+        txt += "redirected : " + response.redirected + "\n";
+        txt +=
+          "status : " + response.statusText + "(" + response.status + ")\n";
+        txt += "header : {\n";
+        for (let [key, value] of response.headers) {
+          txt += "\t" + key + " : " + value + "\n";
+        }
+        txt += "}\n";
+        obj.txt += txt;
+        if (!obj.fileName) {
+          console.log(txt);
+        }
+      }
       return response.text();
     })
     .then((data) => {
-        if (obj.fileName) {
-          fs.writeFileSync(obj.fileName, data);
+      obj.txt += data;
+      if (obj.fileName) {
+        fs.writeFileSync(obj.fileName, obj.txt);
       } else {
         console.log(data);
       }

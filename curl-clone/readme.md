@@ -8,6 +8,6 @@ curl を JS(node.js)で実装するだけ
 
 - [x] `curl https://example.com` 相当のことができる機能
 - [x] `curl -o file https://example.com` 相当のことができる機能
-- [ ] `curl -v https://example.com` 相当のことができる機能
+- [x] `curl -v https://example.com` 相当のことができる機能
 - [ ] `curl -X POST https://example.com` 相当のことができる機能
 - [ ] `curl -X POST -d "key=value" https://example.com` 相当のことができる機能
