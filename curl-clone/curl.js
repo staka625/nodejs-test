@@ -6,8 +6,8 @@ var obj = {
   shouldBeVerbose: false,
   fileName: "",
   txt: "",
-  option: "POST",
-  body: new URLSearchParams(),
+  option: "GET",
+  body: undefined,
 };
 
 /*
@@ -27,8 +27,7 @@ function isURL(str) {
  * curlコマンドのクローン関数
  */
 function curl() {
-  // argv[0]はnode,argv[1]はファイル名(curl.js)となるので添字は2から開始
-  for (let i = 2; i < process.argv.length; i++) {
+  for (let i = 0; i < process.argv.length; i++) {
     var arg = process.argv[i];
     if (arg === "-v") {
       obj.shouldBeVerbose = true;
@@ -51,12 +50,16 @@ function curl() {
       if (i === process.argv.length) {
         throw "requires parameter";
       }
+      if (obj.body === undefined) {
+        obj.body = new URLSearchParams();
+      }
       var arg1 = process.argv[i + 1];
       var keys = arg1.split("&");
       keys.forEach((key) => {
         var val = key.split("=", 2);
         obj.body.append(...val);
       });
+      i++;
     }
     if (isURL(arg)) {
       obj.url = arg;
